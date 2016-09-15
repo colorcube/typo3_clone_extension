@@ -23,7 +23,7 @@
  *
  * @author Rene Fritz <r.fritz@colorcube.de>
  * @since  2016
- * @see https://github.com/TODO
+ * @see <https://github.com/colorcube/typo3_clone_extension/>
  */
 class clone_extension {
 
