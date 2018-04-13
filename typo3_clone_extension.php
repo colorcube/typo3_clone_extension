@@ -7,7 +7,6 @@
  * of the License, or any later version.
  */
 
-
 /**
  * This is a cli script:
  *
@@ -84,7 +83,7 @@ class clone_extension {
     protected function description()
     {
         echo "\nClone TYPO3 Extension
-        
+
 Copies an existing extension to a new extension key.
 
 All files and folders of a given TYPO3 extension folder are copied to a new extension folder.
@@ -122,11 +121,19 @@ Review the changed files!\n";
         $source = $source . DIRECTORY_SEPARATOR;
         $dest = $dest . DIRECTORY_SEPARATOR;
 
-        // that's the strings we want to replace
+        // that's the strings we want to replace in all variations
         $renames = array();
+        // extension key with old »tx_«-prefix  – tx_oldkey → tx_newkey
         $renames['tx_' . str_replace('_', '', $actualkey)] = 'tx_' . str_replace('_', '', $newkey);
+        // extension key (Folders, Files, Keys) – old_key → new_key
         $renames[$actualkey] = $newkey;
+        // extension-key with underscores as minus (Composer) – old-key → new-key
+        $renames[str_replace('_', '-', $actualkey)] = str_replace('_', '-', $newkey);
+        // Human Readable Key (Labels) – Old Key → New Key
+        $renames[ucwords(str_replace(array('_', '-'), ' ', $actualkey))] = ucwords(str_replace(array('_', '-'), ' ', $newkey));
+        // Upper Camel Case (Namespaced Classes) – OldKey → NewKey
         $renames[static::underscoredToUpperCamelCase($actualkey)] = static::underscoredToUpperCamelCase($newkey);
+        // Upper Camel Case (Namespaced Classes) with old »Tx«-prefix – TxOldkey → TxNewkey
         $renames[static::underscoredToUpperCamelCase('tx_' . str_replace('_', '', $actualkey))] = static::underscoredToUpperCamelCase('tx_' . str_replace('_', '', $newkey));
 
         // for the db table renaming hint
@@ -156,8 +163,6 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
         echo "\n\n";
     }
 
-
-
     /**
      * walk through directories and copy files
      *
@@ -186,13 +191,10 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
             // this directory shouldn't be processed - just copy to target
             if (is_dir($from . $file) && in_array($file, static::DIR_COPY_ONLY)) {
                 $this->copyAllFilesWithRename($from . $file . '/', $to . $file . '/', false, false);
-
-            // let's process the sub dir
+                // let's process the sub dir
             } elseif (is_dir($from . $file) && $file != "." && $file != "..") {
                 $this->copyAllFilesWithRename($from . $file . '/', $to . $file . '/', $search, $replace);
-
             } elseif (is_file($from . $file)) {
-
                 // rename file name
                 if ($search)
                     $filenew = str_replace($search, $replace, $file);
@@ -231,7 +233,6 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
         closedir($handle);
     }
 
-    
     /**
      * Returns a given string with underscores as UpperCamelCase.
      * Example: Converts blog_example to BlogExample
@@ -245,9 +246,5 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
         return $upperCamelCase;
     }
 }
-
-
-
-
 
 $cli = new clone_extension;
