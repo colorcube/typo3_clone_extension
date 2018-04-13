@@ -129,6 +129,8 @@ Review the changed files!\n";
         $renames[$actualkey] = $newkey;
         // extension-key with underscores as minus (Composer) – old-key → new-key
         $renames[str_replace('_', '-', $actualkey)] = str_replace('_', '-', $newkey);
+        // Human Readable Key (Labels) – Old Key → New Key
+        $renames[ucwords(str_replace(array('_', '-'), ' ', $actualkey))] = ucwords(str_replace(array('_', '-'), ' ', $newkey));
         // Upper Camel Case (Namespaced Classes) – OldKey → NewKey
         $renames[static::underscoredToUpperCamelCase($actualkey)] = static::underscoredToUpperCamelCase($newkey);
         // Upper Camel Case (Namespaced Classes) with old »Tx«-prefix – TxOldkey → TxNewkey
