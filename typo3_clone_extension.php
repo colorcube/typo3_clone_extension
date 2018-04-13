@@ -127,6 +127,8 @@ Review the changed files!\n";
         $renames['tx_' . str_replace('_', '', $actualkey)] = 'tx_' . str_replace('_', '', $newkey);
         // extension key (Folders, Files, Keys) – old_key → new_key
         $renames[$actualkey] = $newkey;
+        // extension-key with underscores as minus (Composer) – old-key → new-key
+        $renames[str_replace('_', '-', $actualkey)] = str_replace('_', '-', $newkey);
         // Upper Camel Case (Namespaced Classes) – OldKey → NewKey
         $renames[static::underscoredToUpperCamelCase($actualkey)] = static::underscoredToUpperCamelCase($newkey);
         // Upper Camel Case (Namespaced Classes) with old »Tx«-prefix – TxOldkey → TxNewkey
