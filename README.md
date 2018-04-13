@@ -3,44 +3,46 @@
 Copies an existing extension to a new extension key.
 
 All files and folders of a given TYPO3 extension folder are copied to a new extension folder.
-In every file the appearance of the extension key is replaced in it's variants like: my_ext, MyExt, ...
+In every file the appearance of the extension key is replaced in it's variants like: `my_ext`, `MyExt`, …
 
-WARNING: the conversion is done by simple search and replace and might produce wrong results and could break your code!
-Review the changed files!
-
-Use at your own risk!!
+:exclamation: WARNING: the conversion is done by simple search and replace and 
+might produce wrong results and could break your code! Review the changed files! 
+Use at your own risk!
 
 ## Install
 
-typo3_clone_extension.php is a cli script. PHP has to be installed as cli.
+`typo3_clone_extension` is a cli script. PHP has to be installed as cli.
     
-You can run the script with php
-    
+You can simply clone the repository and run the script with PHP
+
     > php typo3_clone_extension.php
         
-or make the script executable:
+or add the script to your global scripts
 
     > chmod +x typo3_clone_extension.php
-    
-and run it
-
-    > ./typo3_clone_extension.php
-    
-Then you may copy it ...
-
     > cp typo3_clone_extension.php /usr/local/bin/typo3_clone_extension
-    
-and just run it with 
+   
+…and just run it with 
     
     > typo3_clone_extension
     
 ## Usage
+
+If installed globally, then just run `typo3_clone_extension` to see all 
+available options.
     
-Just call the script it should give you hints how to use it.
+Example usage
+
+    > typo3_clone_extension path/to/my_ext path/to/new_ext
 
 ## Remarks
 
-I used this code over the years and lately I changed it to exist as a cli. It worked for me fine. But if it kills your cat, don't blame me. I warned you!
+I used this code over the years and lately I changed it to exist as a cli. 
+It worked for me fine. But if it kills your cat, don't blame me. I warned you!
+
+## License
+
+GNU General Public License, version 2 or later
 
 ## Contribute
 
