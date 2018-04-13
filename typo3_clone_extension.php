@@ -168,13 +168,13 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
      *
      * @param string $from
      * @param string $to
-     * @param array $search
-     * @param array $replace
+     * @param mixed $search
+     * @param mixed $replace
      */
     protected function copyAllFilesWithRename($from, $to, $search, $replace)
     {
         if (!is_dir($to)) {
-            if (!mkdir($to)) {
+            if (!mkdir($to) && !is_dir($to)) {
                 echo "Error: could not create dir: {$to}\n";
                 exit (1);
             }
@@ -190,10 +190,12 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
 
             // this directory shouldn't be processed - just copy to target
             if (is_dir($from . $file) && in_array($file, static::DIR_COPY_ONLY)) {
-                $this->copyAllFilesWithRename($from . $file . '/', $to . $file . '/', false, false);
+                $this->copyAllFilesWithRename($from . $file . DIRECTORY_SEPARATOR, $to . $file . DIRECTORY_SEPARATOR, false, false);
+
                 // let's process the sub dir
-            } elseif (is_dir($from . $file) && $file != "." && $file != "..") {
-                $this->copyAllFilesWithRename($from . $file . '/', $to . $file . '/', $search, $replace);
+            } elseif (is_dir($from . $file) && $file !== '.' && $file !== '..') {
+                $this->copyAllFilesWithRename($from . $file . DIRECTORY_SEPARATOR, $to . $file . DIRECTORY_SEPARATOR, $search, $replace);
+
             } elseif (is_file($from . $file)) {
                 // rename file name
                 if ($search)
@@ -211,9 +213,9 @@ WHERE table_schema = '###MY-DB-NAME###' AND table_name LIKE '%$dbPrefixOld%';";
 
                 } else {
                     // process content of file
-                    $ft = fopen($to . $filenew, "w");
+                    $ft = fopen($to . $filenew, 'w');
                     if ($ft) {
-                        $fs = fopen($from . $file, "r");
+                        $fs = fopen($from . $file, 'r');
                         while (!feof($fs)) {
                             $buffer = fgets($fs, 4096);
                             if ($search) $buffer = str_replace($search, $replace, $buffer);
